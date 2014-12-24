@@ -4,6 +4,7 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var mongoose = require('mongoose');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
@@ -21,6 +22,15 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+mongoose.model('players', {name: String, ranking: String});
+
+app.get('/players', function(req, res){
+    mongoose.model('players').find(function(err, people) {
+       res.status(200).send(people);
+    });
+});
+
 
 app.use('/', routes);
 app.use('/users', users);
@@ -44,6 +54,8 @@ if (app.get('env') === 'development') {
             error: err
         });
     });
+
+    mongoose.connect('mongodb://localhost:27017/atp_tour');
 }
 
 // production error handler
