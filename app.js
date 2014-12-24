@@ -23,11 +23,11 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-mongoose.model('players', {name: String, ranking: String});
+mongoose.model('tweets', {name: String, ranking: String});
 
-app.get('/players', function(req, res){
-    mongoose.model('players').find(function(err, people) {
-       res.status(200).send(people);
+app.get('/tweets', function(req, res){
+    mongoose.model('tweets').find(function(err, all_tweets) {
+       res.status(200).send(all_tweets);
     });
 });
 
@@ -55,7 +55,7 @@ if (app.get('env') === 'development') {
         });
     });
 
-    mongoose.connect('mongodb://localhost:27017/atp_tour');
+    mongoose.connect('mongodb://localhost/twitter_db');
 }
 
 // production error handler
