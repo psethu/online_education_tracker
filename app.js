@@ -5,9 +5,11 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
+var fs = require('fs');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
+
 
 var app = express();
 
@@ -23,10 +25,14 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-var query = mongoose.model('tweets', {tweet: String, quote: String});
+// using fs library to load files from models directory
+fs.readdirSync(__dirname+'/models').forEach(function(filename){
+    // only require if js
+    if (~filename.indexOf('.js')) require(__dirname+'/models/'+filename)
+})
 
 app.get('/tweets', function(req, res){
-    query.find({ tweet:"test" }).find(function(err, all_tweets) {
+    mongoose.model('tweets').find({ tweet:"test" }).find(function(err, all_tweets) {
        res.status(200).send(all_tweets);
     });
 });
