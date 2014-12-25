@@ -23,10 +23,11 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-mongoose.model('tweets', {tweet: String, quote: String});
+var query = mongoose.model('tweets', {tweet: String, quote: String});
 
 app.get('/tweets', function(req, res){
-    mongoose.model('tweets').find(function(err, all_tweets) {
+    //mongoose.model('tweets').find(
+    query.find({ tweet:"test" }).find(function(err, all_tweets) {
        res.status(200).send(all_tweets);
     });
 });
