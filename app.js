@@ -26,7 +26,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 var query = mongoose.model('tweets', {tweet: String, quote: String});
 
 app.get('/tweets', function(req, res){
-    //mongoose.model('tweets').find(
     query.find({ tweet:"test" }).find(function(err, all_tweets) {
        res.status(200).send(all_tweets);
     });
