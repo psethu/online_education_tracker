@@ -23,7 +23,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-mongoose.model('tweets', {name: String, ranking: String});
+mongoose.model('tweets', {tweet: String, quote: String});
 
 app.get('/tweets', function(req, res){
     mongoose.model('tweets').find(function(err, all_tweets) {
