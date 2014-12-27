@@ -10,10 +10,10 @@ var fs = require('fs');
 var routes = require('./routes/index');
 var users = require('./routes/users');
 
-
 var app = express();
 
-// twitter API
+// uses twitter API to store #onlineeducation tweets
+/*************************************************/
 var Twit = require('twit');
 
 var twit = new Twit({
@@ -28,8 +28,10 @@ var twit = new Twit({
 var stream = twit.stream('statuses/filter', { track: '#onlineeducation', language: 'en' })
 
 stream.on('tweet', function (tweet) {
-  console.log(tweet)
+  console.log(tweet);
 })
+/*************************************************/
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -43,17 +45,32 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+
 // using fs library to load files from models directory
 fs.readdirSync(__dirname+'/models').forEach(function(filename){
     // only require if js
     if (~filename.indexOf('.js')) require(__dirname+'/models/'+filename)
 })
+    //console.log(mongoose.model('tweets').save({ tweet:"test_2" }));
+//mongoose.model('tweets').save({tweet:"test_2"}).find(function(err, tweets) {
+    
+//});
+ // mongoose.model('tweets').db.tweets.save({tweet:"Weather is good today"});
+
+//var mongoose = require('./models/tweets');//.mongoose.model('tweet', tweetsSchema);
+//console.log(mongoose)
+//var tweet = new mongoose.Tweet();//var Tweet = mongoose.model('tweet', tweetsSchema);
+var Tweet = require('./models/tweets.js')
+var tweet = new Tweet({tweet:"Theres gotta be better NodeJS docs", date:(new Date ())})
+console.log(tweet)
 
 app.get('/tweets', function(req, res){
     mongoose.model('tweets').find({ tweet:"test" }).find(function(err, all_tweets) {
        res.status(200).send(all_tweets);
     });
 });
+
+
 
 
 app.use('/', routes);

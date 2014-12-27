@@ -3,7 +3,9 @@ var Schema = mongoose.Schema;
 
 var tweetsSchema = new Schema({
 	tweet: String, 
-	quote: String
+	date: Date
 });
 
-mongoose.model('tweets', tweetsSchema)
+var Tweet = mongoose.model('tweets', tweetsSchema)
+
+module.exports = Tweet
