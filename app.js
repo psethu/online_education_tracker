@@ -61,9 +61,7 @@ fs.readdirSync(__dirname+'/models').forEach(function(filename){
 //console.log(mongoose)
 //var tweet = new mongoose.Tweet();//var Tweet = mongoose.model('tweet', tweetsSchema);
 var Tweet = require('./models/tweets.js')
-var tweet = new Tweet({tweet:"Theres gotta be better NodeJS docs", date:(new Date ())})
-console.log(tweet)
-tweet.save()
+var tweet = new Tweet({tweet:"There has to be better Mongoose docs", date:(new Date ())})
 
 app.get('/tweets', function(req, res){
     mongoose.model('tweets').find({}).find(function(err, all_tweets) {
