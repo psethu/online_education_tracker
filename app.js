@@ -13,6 +13,24 @@ var users = require('./routes/users');
 
 var app = express();
 
+// twitter API
+var Twit = require('twit');
+
+var twit = new Twit({
+    consumer_key:         'OLqxvrpcYD0RYEHqU2PaSSAsy'
+  , consumer_secret:      'LqmoKAVHHALYXFky4pBZ3q1KxmJJVYXkHDMzHBvQfHgwE6984Q'
+  , access_token:         '2188939550-1j8tsOhitOOUaXuG9ksK7ijeNkz5xChx2FM3PzV'
+  , access_token_secret:  'wcnKNAraDoQu8n3BgBLaHWtiWpb38OtR78krtDQH98oW9'
+})
+
+// filter the public stream by english tweets containing `#apple`
+
+var stream = twit.stream('statuses/filter', { track: '#onlineeducation', language: 'en' })
+
+stream.on('tweet', function (tweet) {
+  console.log(tweet)
+})
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
