@@ -9,17 +9,21 @@ block content
 				th Date
 				th Tweet
 		tbody
-		each val, index in data
+		each val in data
 			tr
 				td=val.date
 				td(class="tweet_class")=val.tweet
 	br
-
-	h3 Filter by date
-	form(name="date_filter")
+	br
+	
+	
+	form(name="date_filter", class="form_border")
+		h3 Filter by date
 		| From:  &nbsp;
 		input(class="datepicker")
 		br
 		br
 		| To: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 		input(class="datepicker")
+		p
+		input(type="submit")

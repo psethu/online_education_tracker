@@ -33,3 +33,12 @@ a {
 table, th, td{
 	padding: 7px 3px 7px 3px;
 }
+
+.form_border {
+	border: 2px solid gray;
+	height: 175px;
+	width: 250px;
+	padding: 10px;
+	padding-top: 0px;
+	padding-bottom: 0px;
+}
