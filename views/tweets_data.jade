@@ -3,4 +3,6 @@ extends layout
 block content
   h1= title
   p #{title} data on online education tweets
-  
+  ul
+  each val, index in data
+    li= index + ': ' + val
