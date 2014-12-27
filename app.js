@@ -57,8 +57,8 @@ fs.readdirSync(__dirname+'/models').forEach(function(filename){
 })
 
 app.get('/tweets', function(req, res){
-    mongoose.model('tweets').find({}).find(function(err, all_tweets) {
-       all_tweets.sort({date:-1});// sort the tweets by date
+    mongoose.model('tweets').find({}).sort({date:-1}).find(function(err, all_tweets) {
+        // the query result is an array of javascript objects
        res.render('tweets_data', { title: 'Twitter', data : all_tweets});//res.status(200).send(all_tweets);
     });
 });
