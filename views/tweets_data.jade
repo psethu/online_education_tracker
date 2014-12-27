@@ -1,7 +1,15 @@
 extends layout
 
 block content
-  h1= "Online education trends"
-  ul
-  each val, index in data
-    li= index + ': ' + val
+	h1= "Online education trends"
+	br
+	table
+		thead
+			tr
+				th Date
+				th Tweet
+		tbody
+		each val, index in data
+			tr
+				td=val.date
+				td(class="tweet_class")=val.tweet
