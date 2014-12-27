@@ -14,6 +14,8 @@ var app = express();
 
 // uses twitter API to store #onlineeducation tweets
 /*************************************************/
+var Tweet = require('./models/tweets.js')
+
 var Twit = require('twit');
 
 var twit = new Twit({
@@ -27,8 +29,11 @@ var twit = new Twit({
 
 var stream = twit.stream('statuses/filter', { track: '#onlineeducation', language: 'en' })
 
-stream.on('tweet', function (tweet) {
-  console.log(tweet);
+stream.on('tweet', function (incoming_tweet) {
+  var final_tweet = new Tweet({})
+  final_tweet.tweet = incoming_tweet.text;
+  final_tweet.date = incoming_tweet.created_at;
+  final_tweet.save()
 })
 /*************************************************/
 
@@ -51,17 +56,6 @@ fs.readdirSync(__dirname+'/models').forEach(function(filename){
     // only require if js
     if (~filename.indexOf('.js')) require(__dirname+'/models/'+filename)
 })
-    //console.log(mongoose.model('tweets').save({ tweet:"test_2" }));
-//mongoose.model('tweets').save({tweet:"test_2"}).find(function(err, tweets) {
-    
-//});
- // mongoose.model('tweets').db.tweets.save({tweet:"Weather is good today"});
-
-//var mongoose = require('./models/tweets');//.mongoose.model('tweet', tweetsSchema);
-//console.log(mongoose)
-//var tweet = new mongoose.Tweet();//var Tweet = mongoose.model('tweet', tweetsSchema);
-var Tweet = require('./models/tweets.js')
-var tweet = new Tweet({tweet:"There has to be better Mongoose docs", date:(new Date ())})
 
 app.get('/tweets', function(req, res){
     mongoose.model('tweets').find({}).find(function(err, all_tweets) {
