@@ -8,7 +8,6 @@ var mongoose = require('mongoose');
 var fs = require('fs');
 
 var routes = require('./routes/index');
-var users = require('./routes/users');
 
 var app = express();
 
@@ -59,7 +58,7 @@ fs.readdirSync(__dirname+'/models').forEach(function(filename){
 
 app.get('/tweets', function(req, res){
     mongoose.model('tweets').find({}).find(function(err, all_tweets) {
-       res.status(200).send(all_tweets);
+       res.render('tweets_data', { title: 'Twitter', data : all_tweets});//res.status(200).send(all_tweets);
     });
 });
 
@@ -67,7 +66,6 @@ app.get('/tweets', function(req, res){
 
 
 app.use('/', routes);
-app.use('/users', users);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
