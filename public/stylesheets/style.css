@@ -7,17 +7,17 @@ a {
   color: #00B7FF;
 }
 
-table{
+.tweets_data{
     border-collapse: collapse;
     border-spacing: 0;
 }
 
 
-td, th{
+.tweets_data td, .tweets_data th{
 	border: 1px solid green;//transparent;
 }
 
-th {
+.tweets_data th {
 	background-color: #339900;
 	color: #E0E0E0 ;
 	letter-spacing: 1px;
@@ -26,7 +26,7 @@ th {
 
 /* Cells in odd rows (1,3,5...) are another (excludes header cells)  */ 
 /*tr td:nth-child(odd) { background: #FEFEFE; } */
-td.tweet_class{
+.tweets_data td.tweet_class{
 	padding-left: 20px;
 }
 

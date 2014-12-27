@@ -3,7 +3,7 @@ extends layout
 block content
 	h1= "Online education trends"
 	br
-	table
+	table(class="tweets_data")
 		thead
 			tr
 				th Date
@@ -13,3 +13,8 @@ block content
 			tr
 				td=val.date
 				td(class="tweet_class")=val.tweet
+	br
+
+	form(name="input")
+		| Date:  &nbsp;
+		input(id="datepicker")
