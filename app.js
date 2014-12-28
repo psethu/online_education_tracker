@@ -63,9 +63,6 @@ app.get('/tweets', function(req, res){
     });
 });
 
-
-
-
 app.use('/', routes);
 
 // catch 404 and forward to error handler
