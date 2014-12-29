@@ -1,7 +1,17 @@
 extends layout
 
 block content
+	- var end_date = to_date
+
 	h1= "Online education trends"
+	br
+	div	Viewing from
+		strong	#{from_date}
+		| &nbsp; to &nbsp;
+		if (end_date === null)
+			strong present
+		else
+			strong #{to_date}
 	br
 	table(class="tweets_data")
 		thead
@@ -13,6 +23,7 @@ block content
 			tr
 				td=val.date
 				td(class="tweet_class")=val.tweet
+
 	br
 	br
 

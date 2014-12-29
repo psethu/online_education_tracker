@@ -60,21 +60,37 @@ fs.readdirSync(__dirname+'/models').forEach(function(filename){
 globals for initial data access
   - updated once form is submitted
  */
-var start_date = new Date("1/1/2000")
-var end_date = new Date() // on default gets the date at this moment
+var start_date = "1/1/2000"
+var end_date = null;
+// no end_date - will use new Date() to get date at this moment
 
 app.put('/request', function(req, res) {
     start_date = req.body.input1;
     end_date = req.body.input2;
+    console.log("\n\n\n\ntest SECOND")
+    console.log(start_date)
     res.status(200).send('Ok');
 })
 
 /* Assigned start_date/end_date variables in find query so the view of tweets
    can be updated upon from/to selections in the form */
 app.get('/tweets', function(req, res){
-    mongoose.model('tweets').find({date: {$gte: start_date, $lte: end_date}}).sort({date:-1}).find(function(err, all_tweets) {
+  /* create here start/end date_obj for data consistency 
+          Ex: string - "1/1/2000" vs object - Date("1/1/2000") */
+  var start_date_obj = new Date(start_date)
+  if (end_date == null) 
+    var end_date_obj = new Date()
+  else
+    var end_date_obj = new Date(end_date);
+
+    mongoose.model('tweets').find({date: {$gte: start_date_obj, $lte: end_date_obj }}).sort({date:-1}).find(function(err, all_tweets) {
         // the query result is an array of javascript objects
-       res.render('tweets_data', { title: 'Twitter', data : all_tweets});//res.status(200).send(all_tweets);
+        console.log("\n\n\n\ntest")
+        console.log(start_date)
+        console.log("end_date")
+        console.log(end_date)
+
+       res.render('tweets_data', { title: 'Twitter', data : all_tweets, from_date: start_date, to_date: end_date});
     });
 });
 
