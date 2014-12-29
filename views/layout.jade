@@ -7,10 +7,14 @@ html
     link(rel="stylesheet", href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css", type="text/css")
     script(src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js")
     script(src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js")
+    script(src="/javascripts/Chart.js")
+    script(src="/javascripts/chart_data.js")
     script.
       $(function() {
          $(".datepicker").datepicker();
          $("#form_1").submit(doPut);
+         var ctx = document.getElementById("myChart").getContext("2d");
+         var myLineChart = new Chart(ctx).Line(data);
       });
         function doPut() {
             var aj = $.ajax({
