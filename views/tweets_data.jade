@@ -15,14 +15,14 @@ block content
 				td(class="tweet_class")=val.tweet
 	br
 	br
-	
-	form(name="date_filter", class="form_border")
+
+	form(id="form_1", name="form_1", class="form_border")
 		h3 Filter by date
 		| From:  &nbsp;
-		input(class="datepicker")
+		input(class="datepicker", id="input1", name="input1", type="text")
 		br
 		br
 		| To: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-		input(class="datepicker")
+		input(class="datepicker", id="input2", name="input2", type="text")
 		p
-		input(type="submit")
+		input(type="submit", value="Submit")
