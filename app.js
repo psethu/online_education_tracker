@@ -62,9 +62,14 @@ globals for initial data access
  */
 var start_date = "1/1/2000"
 var end_date = null;
+  /* create here start/end date_obj for data consistency 
+          Ex: string - "1/1/2000" vs object - Date("1/1/2000") */
+var start_date_obj = null;
+var end_date_obj = null;
 // no end_date - will use new Date() to get date at this moment
+var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 var data = {
-      labels: ["January", "February", "March", "April", "May", "June", "July"],
+      labels: [],
       datasets: [
           {
               label: "My First dataset",
@@ -74,36 +79,67 @@ var data = {
               pointStrokeColor: "#fff",
               pointHighlightFill: "#fff",
               pointHighlightStroke: "rgba(220,220,220,1)",
-              data: [85, 59, 80, 81, 56, 55, 40]
+              data: [33, 27, 46, 14, 12]
           }
       ]
   };
 
+/*****************************************/
+/* Create x-axis from last num_days days */
+/*****************************************/
+var num_days = 5;
+var x_axis = [];
+var current_date = new Date(24*60*60000*2);
+var delta = num_days;
+var month_name = "";
+var day_of_month = 0;
+var days_of_month = [];
+var factor = 24*60*60000; // 1 day = 24 * 60 * (1 min = 60000 miliseconds)
+var converted_date = null; // in case we are at Jan 1 and need to go to Dec 31
+
+for (var i = 0; i<num_days; i++) {
+    delta -= 1
+    converted_date = new Date(current_date-(delta*factor))
+    month_name = months[converted_date.getMonth()]
+    days_of_month.push(converted_date.getDate())
+    day_of_month = (days_of_month[i]).toString()
+    x_axis.push(month_name+day_of_month)
+}
+console.log("The x-axis")
+console.log(x_axis)
+console.log(days_of_month)
+data.labels = x_axis
+/**************************/
 
 app.put('/request', function(req, res) {
     start_date = req.body.input1;
     end_date = req.body.input2;
-    data.datasets[0].data[0] = 55;
+
+  start_date_obj = new Date(start_date)
+  if (end_date == null) 
+    end_date_obj = new Date()
+  else
+    end_date_obj = new Date(end_date);
+
     res.status(200).send('Ok');
 })
 
 /* Assigned start_date/end_date variables in find query so the view of tweets
    can be updated upon from/to selections in the form */
 app.get('/tweets', function(req, res){
-  /* create here start/end date_obj for data consistency 
-          Ex: string - "1/1/2000" vs object - Date("1/1/2000") */
-  var start_date_obj = new Date(start_date)
+  // need to assign start/end date_obj when app first connects to /tweets
+  start_date_obj = new Date(start_date)
   if (end_date == null) 
-    var end_date_obj = new Date()
+    end_date_obj = new Date()
   else
-    var end_date_obj = new Date(end_date);
+    end_date_obj = new Date(end_date);
 
-  console.log("\n\n\n date objects")
-  console.log(start_date_obj)
-  console.log(end_date_obj)
+
 
     mongoose.model('tweets').find({date: {$gte: start_date_obj, $lte: end_date_obj }}).sort({date:-1}).find(function(err, all_tweets) {
-        // the query result is an array of javascript objects        
+        // the query result is an array of javascript objects
+        console.log("\n\n\n\nTHE data")
+        console.log(all_tweets)        
        res.render('tweets_data', { title: 'Twitter', tweets_data : all_tweets, from_date: start_date, to_date: end_date, graph_data : data});
     });
 });
