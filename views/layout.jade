@@ -16,19 +16,23 @@ html
         function doPut() {
           var input1 = $( "#input1" ).val()
           var input2 = $( "#input2" ).val()
+          var from_seconds = new Date(input1) - 0 // doing "-0" to convert to miliseconds
+          var to_seconds = new Date(input2) - 0
           if (input1 == "" || input2 == "") {
               alert("Please select both dates.")
               event.preventDefault(); // avoid submit when form input erroneous
             }
+          else if (from_seconds > to_seconds) {
+              alert("From date cannot be later than to date")
+              event.preventDefault();
+            }
           else {
             // check that date range is within max_days
               var max_days = 28;
-              var from_seconds = new Date(input1) - 0 // doing "-0" to convert to miliseconds
-              var to_seconds = new Date(input2) - 0
               var max_seconds = 1000*60*60*24*max_days
               if (to_seconds-from_seconds > max_seconds) {
                   alert("Date range to large! Please select less than 28 days")
-                  event.preventDefault(); // avoid submit when form input erroneous
+                  event.preventDefault();
               }
               else {
               var aj = $.ajax({
