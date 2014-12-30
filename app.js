@@ -89,7 +89,7 @@ var data = {
 /*****************************************/
 var num_days = 5;
 var x_axis = [];
-var current_date = new Date(24*60*60000*2);
+var current_date = new Date();
 var delta = num_days;
 var month_name = "";
 var day_of_month = 0;
@@ -105,11 +105,40 @@ for (var i = 0; i<num_days; i++) {
     day_of_month = (days_of_month[i]).toString()
     x_axis.push(month_name+day_of_month)
 }
-console.log("The x-axis")
-console.log(x_axis)
-console.log(days_of_month)
 data.labels = x_axis
 /**************************/
+
+
+/*****************************************************/
+/* Function to assign the total tweets for each day */
+/****************************************************/
+/*
+Sample input:
+[ { _id: { day: 30 }, count: 1 },
+  { _id: { day: 29 }, count: 7 },
+  { _id: { day: 28 }, count: 2 },
+  { _id: { day: 27 }, count: 4 } ]
+ */
+function dataset_add(total_tweets) {
+  // this for loop is so the correct count goes to the correct day
+  //    since we can have a group that does not have all days like in Sample input
+  var day_found = false;
+  for (var i=0; i < num_days; i++) {
+      for (var j = 0; j < total_tweets.length; j++) {
+          if (total_tweets[j]._id.day === days_of_month[i]) {
+              data.datasets[0].data[i] = total_tweets[j].count
+              day_found = true
+          }
+      }
+      // if went through entire loop and still false, then assign 0 counts
+      if (!day_found) {
+          data.datasets[0].data[i] = 0
+      }
+      day_found = false;
+  }
+}
+
+/******************************************/
 
 app.put('/request', function(req, res) {
     start_date = req.body.input1;
@@ -134,13 +163,14 @@ app.get('/tweets', function(req, res){
   else
     end_date_obj = new Date(end_date);
 
-
-
     mongoose.model('tweets').find({date: {$gte: start_date_obj, $lte: end_date_obj }}).sort({date:-1}).find(function(err, all_tweets) {
-        // the query result is an array of javascript objects
-        console.log("\n\n\n\nTHE data")
-        console.log(all_tweets)        
-       res.render('tweets_data', { title: 'Twitter', tweets_data : all_tweets, from_date: start_date, to_date: end_date, graph_data : data});
+      // the query result is an array of javascript objects
+      mongoose.model('tweets').aggregate( [ { $group: { _id : {day: {$dayOfMonth:"$date"} }, count : {$sum:1} } } ], function(err, tweets_per_day) {
+
+        dataset_add(tweets_per_day)
+
+        res.render('tweets_data', { title: 'Twitter', tweets_data : all_tweets, from_date: start_date, to_date: end_date, graph_data : data});
+      });
     });
 });
 
