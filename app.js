@@ -67,6 +67,9 @@ var end_date = null;
 app.put('/request', function(req, res) {
     start_date = req.body.input1;
     end_date = req.body.input2;
+    console.log("check")
+    console.log(start_date)
+    console.log(end_date)
     res.status(200).send('Ok');
 })
 
@@ -81,10 +84,12 @@ app.get('/tweets', function(req, res){
   else
     var end_date_obj = new Date(end_date);
 
+  console.log("\n\n\n date objects")
+  console.log(start_date_obj)
+  console.log(end_date_obj)
+
     mongoose.model('tweets').find({date: {$gte: start_date_obj, $lte: end_date_obj }}).sort({date:-1}).find(function(err, all_tweets) {
         // the query result is an array of javascript objects
-        console.log("\n\ntest")
-        console.log(all_tweets[0].date)
        res.render('tweets_data', { title: 'Twitter', data : all_tweets, from_date: start_date, to_date: end_date});
     });
 });

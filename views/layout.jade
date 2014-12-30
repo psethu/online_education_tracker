@@ -8,13 +8,27 @@ html
     script(src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js")
     script(src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js")
     script(src="/javascripts/Chart.js")
-    script(src="/javascripts/chart_data.js")
     script.
       $(function() {
          $(".datepicker").datepicker();
          $("#form_1").submit(doPut);
          var ctx = document.getElementById("myChart").getContext("2d");
-         var myLineChart = new Chart(ctx).Line(data);
+        var data = {
+            labels: ["January", "February", "March", "April", "May", "June", "July"],
+            datasets: [
+                {
+                    label: "My First dataset",
+                    fillColor: "rgba(220,220,220,0.2)",
+                    strokeColor: "rgba(220,220,220,1)",
+                    pointColor: "rgba(220,220,220,1)",
+                    pointStrokeColor: "#fff",
+                    pointHighlightFill: "#fff",
+                    pointHighlightStroke: "rgba(220,220,220,1)",
+                    data: [65, 59, 80, 81, 56, 55, 40]
+                }
+            ]
+        };
+        var myLineChart = new Chart(ctx).Line(data);
       });
         function doPut() {
             var aj = $.ajax({
