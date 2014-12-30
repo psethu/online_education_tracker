@@ -14,25 +14,34 @@ html
          $("#form_1").submit(doPut);
       });
         function doPut() {
-            var max_days = 28;
-            var from_seconds = new Date($( "#input1" ).val()) - 0 // doing "-0" to convert to miliseconds
-            var to_seconds = new Date($( "#input2" ).val()) - 0
-            var max_seconds = 1000*60*60*24*max_days
-            if (to_seconds-from_seconds > max_seconds) {
-                alert("Date range to large! Please select less than 28 days")
-                event.preventDefault(); // avoid submit when form input erroneous
+          var input1 = $( "#input1" ).val()
+          var input2 = $( "#input2" ).val()
+          if (input1 == "" || input2 == "") {
+              alert("Please select both dates.")
+              event.preventDefault(); // avoid submit when form input erroneous
             }
-            else {
-            var aj = $.ajax({
-                        url: "request",
-                        type: "put",
-                        data: $("#form_1").serializeArray(),
-                        success: function(data) {
-                            window.location.href = "/tweets"
-                        }
-                });
-                return false;
-            }
+          else {
+            // check that date range is within max_days
+              var max_days = 28;
+              var from_seconds = new Date(input1) - 0 // doing "-0" to convert to miliseconds
+              var to_seconds = new Date(input2) - 0
+              var max_seconds = 1000*60*60*24*max_days
+              if (to_seconds-from_seconds > max_seconds) {
+                  alert("Date range to large! Please select less than 28 days")
+                  event.preventDefault(); // avoid submit when form input erroneous
+              }
+              else {
+              var aj = $.ajax({
+                          url: "request",
+                          type: "put",
+                          data: $("#form_1").serializeArray(),
+                          success: function(data) {
+                              window.location.href = "/tweets"
+                          }
+                  });
+                  return false;
+              }
+          }
         }
   body
     block content
