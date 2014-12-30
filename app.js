@@ -97,17 +97,11 @@ var num_days = 5; // default to 5 if start/end dates unspecified
 var days_of_month = []; // populated in xaxis_create, used in dataset_add
 
 function xaxis_create(from_date_obj, to_date_obj) {
-    console.log("\n\n\nDate objects")
-    console.log(from_date_obj)
-    console.log(to_date_obj)
-
     num_days = Math.floor((to_date_obj-from_date_obj)/(factor))
     var current_date_obj = to_date_obj
     var start_date_obj = from_date_obj
 
     var delta = num_days;
-    console.log("\n\n After put")
-    console.log(num_days)
     var xaxis = [];
     var month_name = "";
     var day_numerical = 0;
@@ -116,20 +110,14 @@ function xaxis_create(from_date_obj, to_date_obj) {
     for (var i = 0; i<num_days; i++) {
         delta -= 1
         converted_date = new Date(current_date_obj-(delta*factor))
-        
-        console.log(converted_date)
-        
+
         month_name = months[converted_date.getMonth()]
         days_of_month.push(converted_date.getDate())
-        
-        console.log(converted_date.getDate())
-        //console.log(days_of_month)
+
         day_numerical = (days_of_month[i]).toString()
         xaxis.push(month_name+day_numerical)
     }
 
-console.log("\n\n\n Final xaxis")
-console.log(xaxis)
 data.labels = xaxis
 }
 /**************************/
@@ -183,9 +171,6 @@ app.put('/request', function(req, res) {
    can be updated upon from/to selections in the form */
 app.get('/tweets', function(req, res){
   // need to assign start/end date_obj when app first connects to /tweets
-  console.log("\n\n The dates")
-  console.log(start_date)
-  console.log(end_date)
   start_date_obj = new Date(start_date)
   if (end_date == null) 
     end_date_obj = new Date()
