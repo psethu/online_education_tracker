@@ -60,7 +60,13 @@ fs.readdirSync(__dirname+'/models').forEach(function(filename){
 globals for initial data access
   - updated once form is submitted
  */
-var start_date = "1/1/2000"
+var factor = 24*60*60*1000; // 1 day = 24 * 60 * (1 min = 1000 miliseconds * 60)
+
+var start_date = null;
+var temp = new Date(new Date()-(5*factor)) // make this 5 days before
+start_date = ""+(temp.getMonth()+1)+"/"+temp.getDate()+"/"+temp.getFullYear()
+// if current_date 12/30/14, start_date 12/25/14
+
 var end_date = null;
   /* create here start/end date_obj for data consistency 
           Ex: string - "1/1/2000" vs object - Date("1/1/2000") */
@@ -87,25 +93,22 @@ var data = {
 /*****************************************/
 /* Create x-axis from last num_days days */
 /*****************************************/
-var num_days = 5; // default to 5 if from/to dates are NULL
+var num_days = 5; // default to 5 if start/end dates unspecified
 var days_of_month = []; // populated in xaxis_create, used in dataset_add
 
 function xaxis_create(from_date_obj, to_date_obj) {
-    var factor = 24*60*60*1000; // 1 day = 24 * 60 * (1 min = 1000 miliseconds * 60)
+    console.log("\n\n\nDate objects")
+    console.log(from_date_obj)
+    console.log(to_date_obj)
 
-    if (to_date_obj === null && from_date_obj === null) {
-        var current_date_obj = new Date();
-    }
-    else{
-      num_days = (to_date_obj-from_date_obj)/(factor)
-      var current_date_obj = to_date_obj
-      var start_date_obj = from_date_obj
-    } 
+    num_days = Math.floor((to_date_obj-from_date_obj)/(factor))
+    var current_date_obj = to_date_obj
+    var start_date_obj = from_date_obj
 
     var delta = num_days;
     console.log("\n\n After put")
     console.log(num_days)
-    var x_axis = [];
+    var xaxis = [];
     var month_name = "";
     var day_numerical = 0;
     var converted_date = null; // in case we are at Jan 1 and need to go to Dec 31
@@ -113,16 +116,22 @@ function xaxis_create(from_date_obj, to_date_obj) {
     for (var i = 0; i<num_days; i++) {
         delta -= 1
         converted_date = new Date(current_date_obj-(delta*factor))
+        
+        console.log(converted_date)
+        
         month_name = months[converted_date.getMonth()]
         days_of_month.push(converted_date.getDate())
+        
+        console.log(converted_date.getDate())
+        //console.log(days_of_month)
         day_numerical = (days_of_month[i]).toString()
-        x_axis.push(month_name+day_numerical)
+        xaxis.push(month_name+day_numerical)
     }
 
-data.labels = x_axis
+console.log("\n\n\n Final xaxis")
+console.log(xaxis)
+data.labels = xaxis
 }
-
-xaxis_create(null, null);
 /**************************/
 
 
@@ -174,6 +183,9 @@ app.put('/request', function(req, res) {
    can be updated upon from/to selections in the form */
 app.get('/tweets', function(req, res){
   // need to assign start/end date_obj when app first connects to /tweets
+  console.log("\n\n The dates")
+  console.log(start_date)
+  console.log(end_date)
   start_date_obj = new Date(start_date)
   if (end_date == null) 
     end_date_obj = new Date()
@@ -186,7 +198,7 @@ app.get('/tweets', function(req, res){
 
         xaxis_create(start_date_obj, end_date_obj)
         dataset_add(tweets_per_day)
-
+        days_of_month = []; // need to reset this global
         res.render('tweets_data', { title: 'Twitter', tweets_data : all_tweets, from_date: start_date, to_date: end_date, graph_data : data});
       });
     });
