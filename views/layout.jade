@@ -12,34 +12,21 @@ html
       $(function() {
          $(".datepicker").datepicker();
          $("#form_1").submit(doPut);
-         var ctx = document.getElementById("myChart").getContext("2d");
-        var data = {
-            labels: ["January", "February", "March", "April", "May", "June", "July"],
-            datasets: [
-                {
-                    label: "My First dataset",
-                    fillColor: "rgba(220,220,220,0.2)",
-                    strokeColor: "rgba(220,220,220,1)",
-                    pointColor: "rgba(220,220,220,1)",
-                    pointStrokeColor: "#fff",
-                    pointHighlightFill: "#fff",
-                    pointHighlightStroke: "rgba(220,220,220,1)",
-                    data: [65, 59, 80, 81, 56, 55, 40]
-                }
-            ]
-        };
-        var myLineChart = new Chart(ctx).Line(data);
       });
         function doPut() {
-            var aj = $.ajax({
+        var aj = $.ajax({
                     url: "request",
                     type: "put",
                     data: $("#form_1").serializeArray(),
                     success: function(data) {
+                    //console.log("test")
+                    //console.log(myLineChart)
+                    //myLineChart.datasets[0].points[0].value = 85
                         window.location.href = "/tweets"
                     }
             });
             return false;
+           
         }
   body
     block content

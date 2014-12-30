@@ -67,9 +67,6 @@ var end_date = null;
 app.put('/request', function(req, res) {
     start_date = req.body.input1;
     end_date = req.body.input2;
-    console.log("check")
-    console.log(start_date)
-    console.log(end_date)
     res.status(200).send('Ok');
 })
 
@@ -90,7 +87,23 @@ app.get('/tweets', function(req, res){
 
     mongoose.model('tweets').find({date: {$gte: start_date_obj, $lte: end_date_obj }}).sort({date:-1}).find(function(err, all_tweets) {
         // the query result is an array of javascript objects
-       res.render('tweets_data', { title: 'Twitter', data : all_tweets, from_date: start_date, to_date: end_date});
+        var data = {
+            labels: ["January", "February", "March", "April", "May", "June", "July"],
+            datasets: [
+                {
+                    label: "My First dataset",
+                    fillColor: "rgba(220,220,220,0.2)",
+                    strokeColor: "rgba(220,220,220,1)",
+                    pointColor: "rgba(220,220,220,1)",
+                    pointStrokeColor: "#fff",
+                    pointHighlightFill: "#fff",
+                    pointHighlightStroke: "rgba(220,220,220,1)",
+                    data: [65, 59, 80, 81, 56, 55, 40]
+                }
+            ]
+        };
+        
+       res.render('tweets_data', { title: 'Twitter', tweets_data : all_tweets, from_date: start_date, to_date: end_date, graph_data : data});
     });
 });
 

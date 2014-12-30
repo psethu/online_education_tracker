@@ -19,12 +19,14 @@ block content
 				th Date
 				th Tweet
 		tbody
-		each val in data
+		each val in tweets_data
 			tr
 				td=val.date
 				td(class="tweet_class")=val.tweet
 
 	br
+	p.
+		!{JSON.stringify(graph_data.labels[0])}
 	br
 
 	form(id="form_1", name="form_1", class="form_border")
@@ -41,3 +43,8 @@ block content
 	br
 	h1 Trends from selected dates
 	canvas(id="myChart", width="800", height="600")
+	
+	- 
+	script.
+		var ctx = document.getElementById("myChart").getContext("2d");
+		var myLineChart = new Chart(ctx).Line(graph_data);
