@@ -42,3 +42,8 @@ table, th, td{
 	padding-top: 0px;
 	padding-bottom: 0px;
 }
+
+.notice_no_data {
+	color: #980000 ;
+	font-weight: bold;
+}

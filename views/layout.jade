@@ -18,6 +18,7 @@ html
           var input2 = $( "#input2" ).val()
           var from_seconds = new Date(input1) - 0 // doing "-0" to convert to miliseconds
           var to_seconds = new Date(input2) - 0
+          var current_date_seconds = new Date() - 0
           if (input1 == "" || input2 == "") {
               alert("Please select both dates.")
               event.preventDefault(); // avoid submit when form input erroneous
@@ -30,8 +31,8 @@ html
             // check that date range is within max_days
               var max_days = 28;
               var max_seconds = 1000*60*60*24*max_days
-              if (to_seconds-from_seconds > max_seconds) {
-                  alert("Date range to large! Please select less than 28 days")
+              if (current_date_seconds-from_seconds > max_seconds) {
+                  alert("Date range to large! App is designed to aggregate only recent tweets. \n\n Please select from date less than 28 days ago")
                   event.preventDefault();
               }
               else {
