@@ -87,25 +87,42 @@ var data = {
 /*****************************************/
 /* Create x-axis from last num_days days */
 /*****************************************/
-var num_days = 5;
-var x_axis = [];
-var current_date = new Date();
-var delta = num_days;
-var month_name = "";
-var day_of_month = 0;
-var days_of_month = [];
-var factor = 24*60*60000; // 1 day = 24 * 60 * (1 min = 60000 miliseconds)
-var converted_date = null; // in case we are at Jan 1 and need to go to Dec 31
+var num_days = 5; // default to 5 if from/to dates are NULL
+var days_of_month = []; // populated in xaxis_create, used in dataset_add
 
-for (var i = 0; i<num_days; i++) {
-    delta -= 1
-    converted_date = new Date(current_date-(delta*factor))
-    month_name = months[converted_date.getMonth()]
-    days_of_month.push(converted_date.getDate())
-    day_of_month = (days_of_month[i]).toString()
-    x_axis.push(month_name+day_of_month)
-}
+function xaxis_create(from_date_obj, to_date_obj) {
+    var factor = 24*60*60*1000; // 1 day = 24 * 60 * (1 min = 1000 miliseconds * 60)
+
+    if (to_date_obj === null && from_date_obj === null) {
+        var current_date_obj = new Date();
+    }
+    else{
+      num_days = (to_date_obj-from_date_obj)/(factor)
+      var current_date_obj = to_date_obj
+      var start_date_obj = from_date_obj
+    } 
+
+    var delta = num_days;
+    console.log("\n\n After put")
+    console.log(num_days)
+    var x_axis = [];
+    var month_name = "";
+    var day_numerical = 0;
+    var converted_date = null; // in case we are at Jan 1 and need to go to Dec 31
+
+    for (var i = 0; i<num_days; i++) {
+        delta -= 1
+        converted_date = new Date(current_date_obj-(delta*factor))
+        month_name = months[converted_date.getMonth()]
+        days_of_month.push(converted_date.getDate())
+        day_numerical = (days_of_month[i]).toString()
+        x_axis.push(month_name+day_numerical)
+    }
+
 data.labels = x_axis
+}
+
+xaxis_create(null, null);
 /**************************/
 
 
@@ -167,6 +184,7 @@ app.get('/tweets', function(req, res){
       // the query result is an array of javascript objects
       mongoose.model('tweets').aggregate( [ { $group: { _id : {day: {$dayOfMonth:"$date"} }, count : {$sum:1} } } ], function(err, tweets_per_day) {
 
+        xaxis_create(start_date_obj, end_date_obj)
         dataset_add(tweets_per_day)
 
         res.render('tweets_data', { title: 'Twitter', tweets_data : all_tweets, from_date: start_date, to_date: end_date, graph_data : data});
