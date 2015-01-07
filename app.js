@@ -97,7 +97,7 @@ var num_days = 5; // default to 5 if start/end dates unspecified
 var days_of_month = []; // populated in xaxis_create, used in dataset_add
 
 function xaxis_create(from_date_obj, to_date_obj) {
-    num_days = Math.floor((to_date_obj-from_date_obj)/(factor))
+    num_days = Math.floor((to_date_obj-from_date_obj)/(factor)) // num days b/w from & to
     var current_date_obj = to_date_obj
     var start_date_obj = from_date_obj
 
